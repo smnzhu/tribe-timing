@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Tribe</title>
+  <script text="javascript" src="mcorp.js"></script>
+  <script text="javascript" src="https://mcorp.no/lib/mediasync.js"></script>
+  <script text="javascript" src="https://webtiming.github.io/timingsrc/lib/timingsrc-v2.js"></script>
+  <script>
+    var run = function(timingProvider) {
+      var player = document.getElementById('player1');
+
+      // timing object
+      var to = new TIMINGSRC.TimingObject({
+        provider: timingProvider,
+        range: [0, player.duration]
+      });
+
+      console.log("timingProvider's range: ", timingProvider.range);
+
+      // set up button click handlers
+      var buttonsElem = document.getElementById("buttons");
+      var self = this;
+      buttonsElem.onclick = function(e) {
+        var elem, evt = e ? e : event;
+        if (evt.srcElement) elem = evt.srcElement;
+        else if (evt.target) elem = evt.target;
+        if (elem.id === "pause") {
+          to.update({
+            velocity: 0.0
+          });
+        } else if (elem.id === "tostart") {
+          to.update({
+            position: 0.0
+          });
+        } else if (elem.id === "skipforward") {
+          to.update({
+            position: to.query().position + 5
+          });
+        } else if (elem.id === "skipbackward") {
+          to.update({
+            position: to.query().position - 5
+          });
+        } else if (elem.id === "forward") {
+          var v = to.query();
+          if (v.position === 100 && v.velocity === 0) {
+            to.update({
+              position: 0.0,
+              velocity: 1.0
+            });
+          } else to.update({
+            velocity: 1.0
+          });
+        } else if (elem.id === "toend") {
+          to.update({
+            position: 100.0
+          });
+        }
+      }
+
+      // set up refresh of timingobject position
+      to.on("timeupdate", function() {
+        console.log("timingProvider's skew: ", timingProvider.skew);
+      });
+
+      // set up video sync
+      var sync1 = MCorp.mediaSync(document.getElementById('player1'), to);
+
+    };
+    var MCORP_MOTION_NAME = "shared";
+    var MCORP_APPID = "4005548387245946844";
+
+    var app = MCorp.app(MCORP_APPID, {anon:true});
+    app.run = function () {
+      var timingProvider = app.motions[MCORP_MOTION_NAME];
+      if (document.readyState === "complete") {run(timingProvider);}
+      else {window.onload = function () {run(timingProvider);};}
+    };
+    app.init();
+  </script>
+</head>
+
+<body>
+  <div id="demo" style="height:50px">
+    <p id="buttons">
+      <button id="tostart">Reset</button>
+      <button id="pause">Pause</button>
+      <b><button id="forward">Play</button></b>
+      <button id="skipforward">Skip 5 Ahead</button>
+      <button id="skipbackward">Skip 5 Back </button>
+    </p>
+
+  </div>
+  <p>
+    <video id="player1" style="height:200px">
+      <source src="https://mcorp.no/res/bigbuckbunny.webm" type="video/webm">
+      <source src="https://mcorp.no/res/bigbuckbunny.m4v" type="video/mp4">
+    </video>
+  </p>
+</body>
+
+</html>

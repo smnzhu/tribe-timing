@@ -1,0 +1,22 @@
+# dependencies
+/node_modules
+
+# production
+/dist-server
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# misc
+.DS_Store
+
+*.log
+
+.env
+.env.test.local

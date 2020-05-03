@@ -1,0 +1,16 @@
+
+
+
+// if (new_msv_data.eventid <= msv_data.eventid) {
+//   return false;
+// }
+// TODO: note: the update vector should have the server time.
+// Actually, it looks like the server simply passes it from
+// the client, as long as it is close enough to the real time
+
+// pass the server host and port, and maybe a token? (to timing provider)
+// this way, we can get a token / password from the main
+// app API, just like how we obtain a token for twilio.
+// Or, maybe both of these tokens are obtained from JoinRoom
+// socket call, this way we can automatically expire them as
+// soon as the room is closed.
